@@ -21,7 +21,8 @@ You can, however, use this repository in a meaningful manner by doing the follow
 * Fork this repo
 * Create necessary AWS account and API credentials
 * Store credentials locally in `~/.aws/credentials`
-* Create a `secrets.tf` file at the root of this repo with an [AWS provider config](https://www.terraform.io/docs/providers/aws/index.html)
+* Ensure that you have credentials for the "s3-admin" profile.
+  This profile is used by bootstrap to create s3 buckets and write to them.
 * Modify the `bootstrap.sh` and `bootstrap.tf` files to point to a bucket which you will be able to create (names must be unique, globally) and will use for administrative files.
 * Run `bootstrap.sh`
 * Now you can go to `/terraform` or `/packer` directories and read the README there for useage and modify at your will.

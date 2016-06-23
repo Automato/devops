@@ -1,3 +1,12 @@
+# AWS Provider
+# This providers is used by terraform to connect to and provision AWS
+# By default it will go looking for a ~/.aws/credentials file for keys
+# I'm using a profile I call "s3-admin" which must have the ability to create s3 buckets and write to them
+provider "aws" {
+  region = "us-east-1" # This really doesn't matter
+  profile = "s3-admin"
+}
+
 # Automato Administrative Log Bucket
 # This global s3 bucket is designed to hold logs for the Automato admin bucket actions
 resource "aws_s3_bucket" "automato_admin_log_bucket" {
