@@ -13,5 +13,3 @@
 *.tfstate.backup
 
 # Whitelist Area
-!/terraform.tfstate
-!/terraform.tfstate.backup
