@@ -1,3 +1,15 @@
+# Secrets; exceptions should whitelist below
+*SECRET*
+*secret*
+*Secret*
+
+# Credentials; exceptions should whitelist below
+*cred*
+*CRED*
+*Cred*
+
 # Compiled files
 *.tfstate
 *.tfstate.backup
+
+# Whitelist Area
