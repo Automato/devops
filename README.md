@@ -9,11 +9,11 @@ This repository is dedicated to automating Automato's infrastructure in a public
 * Build & test will perform a dry run and declare the proposed changes
 * Tests will be used to make assertions about infrastructure
 
-## Useage
+## Usage
 
 (TBC) I'm the only one using this, so I haven't documented how yet.
 
-## Useage in your own cloud
+## Usage in your own cloud
 
 Unless you have the sufficient permissions to configure the Automato cloud, you'll have a hard time running this repo without modification.
 You can, however, use this repository in a meaningful manner by doing the following:
