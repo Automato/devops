@@ -1,0 +1,7 @@
+name 'devops-testing'
+maintainer 'The Authors'
+maintainer_email 'you@example.com'
+license 'all_rights'
+description 'Installs/Configures devops-testing'
+long_description 'Installs/Configures devops-testing'
+version '0.1.0'
