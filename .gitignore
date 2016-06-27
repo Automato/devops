@@ -11,5 +11,6 @@
 # Compiled files
 *.tfstate
 *.tfstate.backup
+.terraform/
 
 # Whitelist Area
