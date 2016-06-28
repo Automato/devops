@@ -1,12 +1,3 @@
-# Create a VPC to contain development environment
-module "vpc" {
-  source = "../modules/aws-vpc"
-  name = "Automato Development"
-  cidr = "10.0.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support = true
-}
-
 ######################
 # Create web subnets #
 ######################
@@ -49,3 +40,19 @@ module "web-subnet-e" {
   availability_zone = "us-east-1e"
   cidr_block = "10.0.3.0/24"
 }
+
+##########################
+# Create web network ACL #
+##########################
+# To prevent unwanted traffic from reaching web servers,
+# create an ACL which restricts inbound and outbound
+# subnet traffic. Development may be slightly more
+# relaxed here than other environments
+
+##############################
+# Create web security groups #
+##############################
+# To further restrict unwanted traffic, create security
+# groups for different classes of web servers.
+# Development may be slightly more relaxed here than
+# other environments
