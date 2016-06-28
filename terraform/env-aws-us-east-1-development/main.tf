@@ -1,3 +1,4 @@
+# Create a VPC to contain development environment
 module "vpc" {
   source = "../modules/aws-vpc"
   name = "Automato Development"
@@ -6,6 +7,14 @@ module "vpc" {
   enable_dns_support = true
 }
 
+######################
+# Create web subnets #
+######################
+# To promote high availability within the region,
+# create a subnet in each availability zone within
+# the region.
+
+# Create a web subnet in region us-east-1a
 module "web-subnet-a" {
   source = "../modules/aws-vpc-subnet"
   name = "Automato Development Web A"
@@ -14,6 +23,7 @@ module "web-subnet-a" {
   cidr_block = "10.0.0.0/24"
 }
 
+# Create a web subnet in region us-east-1b
 module "web-subnet-b" {
   source = "../modules/aws-vpc-subnet"
   name = "Automato Development Web B"
@@ -22,6 +32,7 @@ module "web-subnet-b" {
   cidr_block = "10.0.1.0/24"
 }
 
+# Create a web subnet in region us-east-1d
 module "web-subnet-d" {
   source = "../modules/aws-vpc-subnet"
   name = "Automato Development Web D"
@@ -30,6 +41,7 @@ module "web-subnet-d" {
   cidr_block = "10.0.2.0/24"
 }
 
+# Create a web subnet in region us-east-1e
 module "web-subnet-e" {
   source = "../modules/aws-vpc-subnet"
   name = "Automato Development Web E"
