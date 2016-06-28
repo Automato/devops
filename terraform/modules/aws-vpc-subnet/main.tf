@@ -1,8 +1,8 @@
-resoruce "aws_subnet" "module" {
-  vpc_id = "${vars.vpc_id}"
-  cidr_block = "${vars.cidr_block}"
-  availability_zone = "${vars.availability_zone}"
+resource "aws_subnet" "module" {
+  vpc_id = "${var.vpc_id}"
+  cidr_block = "${var.cidr_block}"
+  availability_zone = "${var.availability_zone}"
   tags {
-    Name = "${vars.name}"
+    Name = "${var.name}"
   }
 }
