@@ -24,9 +24,9 @@ module "web-subnet-b" {
 
 module "web-subnet-d" {
   source = "../modules/aws-vpc-subnet"
-  name = "Automato Development Web C"
+  name = "Automato Development Web D"
   vpc_id = "${module.vpc.vpc_id}"
-  availability_zone = "us-east-1c"
+  availability_zone = "us-east-1d"
   cidr_block = "10.0.2.0/24"
 }
 
