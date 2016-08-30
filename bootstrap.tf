@@ -7,28 +7,33 @@ provider "aws" {
   profile = "s3-admin"
 }
 
-# Automato Administrative Log Bucket
-# This global s3 bucket is designed to hold logs for the Automato admin bucket actions
-resource "aws_s3_bucket" "automato_admin_log_bucket" {
-  bucket = "automato-admin-log"
+# Organization name
+variable "org_name" {}
+
+# Administrative Log Bucket
+# This global s3 bucket is designed to hold logs for the admin bucket actions
+variable "s3_admin_log_bucket" {}
+resource "aws_s3_bucket" "s3_admin_log_bucket" {
+  bucket = "${vars.s3_admin_log_bucket}"
   acl = "log-delivery-write"
 
   tags {
-    Name = "Automato administrative log bucket"
+    Name = "${vars.org_name} Administrative Log Bucket"
     Environment = "Internal"
   }
 }
 
 
-# Automato Administrative Bucket
-# This global s3 bucket is designed to hold administrative shared files for the Automato organization
+# Administrative Bucket
+# This global s3 bucket is designed to hold administrative shared files for the organization
 # This is part of bootstrap because the bucket will be used to hold environment tfstate files,
 # results of packer builds, and other shared resources used in provisioning
-resource "aws_s3_bucket" "automato_admin_bucket" {
-  bucket = "automato-admin"
+variable "s3_admin_bucket" {}
+resource "aws_s3_bucket" "s3_admin_bucket" {
+  bucket = "${vars.s3_admin_bucket}"
   acl = "private"
   logging {
-    target_bucket = "${aws_s3_bucket.automato_admin_log_bucket.id}"
+    target_bucket = "${aws_s3_bucket.s3_admin_log_bucket.id}"
     target_prefix = "log/"
   }
   versioning {
@@ -36,7 +41,7 @@ resource "aws_s3_bucket" "automato_admin_bucket" {
   }
 
   tags {
-    Name = "Automato administrative bucket"
+    Name = "${vars.org_name} Administrative Bucket"
     Environment = "Internal"
   }
 }
