@@ -14,11 +14,11 @@ variable "org_name" {}
 # This global s3 bucket is designed to hold logs for the admin bucket actions
 variable "s3_admin_log_bucket" {}
 resource "aws_s3_bucket" "s3_admin_log_bucket" {
-  bucket = "${vars.s3_admin_log_bucket}"
+  bucket = "${var.s3_admin_log_bucket}"
   acl = "log-delivery-write"
 
   tags {
-    Name = "${vars.org_name} Administrative Log Bucket"
+    Name = "${var.org_name} Administrative Log Bucket"
     Environment = "Internal"
   }
 }
@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "s3_admin_log_bucket" {
 # results of packer builds, and other shared resources used in provisioning
 variable "s3_admin_bucket" {}
 resource "aws_s3_bucket" "s3_admin_bucket" {
-  bucket = "${vars.s3_admin_bucket}"
+  bucket = "${var.s3_admin_bucket}"
   acl = "private"
   logging {
     target_bucket = "${aws_s3_bucket.s3_admin_log_bucket.id}"
@@ -41,7 +41,7 @@ resource "aws_s3_bucket" "s3_admin_bucket" {
   }
 
   tags {
-    Name = "${vars.org_name} Administrative Bucket"
+    Name = "${var.org_name} Administrative Bucket"
     Environment = "Internal"
   }
 }
