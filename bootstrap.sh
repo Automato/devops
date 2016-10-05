@@ -7,10 +7,7 @@ set -euvxo pipefail
 # I use a secrets.tf file to setup AWS along with a ~/.aws/credentials file
 
 # Run terraform apply to setup the bucket
-terraform apply \
-  -var org_name=${ORG_NAME} \
-  -var s3_admin_log_bucket=${S3_ADMIN_LOG_BUCKET} \
-  -var s3_admin_bucket=${S3_ADMIN_BUCKET}
+terraform apply
 
 # Move the tfstate for that bucket into itself
 terraform remote config -backend=s3 \
