@@ -6,6 +6,11 @@ set -euvxo pipefail
 # PREREQUISITES: AWS keys need to be setup.
 # I use a secrets.tf file to setup AWS along with a ~/.aws/credentials file
 
+# Check for .env to preseed variables if they exist
+set +e
+source .env
+set -e
+
 # Run terraform apply to setup the bucket
 terraform apply \
   -var org_name=${ORG_NAME} \
