@@ -48,7 +48,7 @@ resource "aws_route" "external_to_internet" {
   gateway_id = "${aws_internet_gateway.tier.id}"
 }
 
-# An elastic IP is allocated for each availability zone
+# An elastic IP is allocated for each availability zone to be used for the NAT gateway in each zone
 resource "aws_eip" "external" {
   count = "${length(var.vpc_zones)}"
   vpc = true
@@ -67,6 +67,14 @@ resource "aws_nat_gateway" "external" {
 
 
 ### EXTERNAL DB SUBNET
+# The base external database subnets.
+# One subnet is allocated for each availability zone specified for the module.
+# External db subnets are designed for data storage for services designed to be connected to the public
+# internet. This data may be fully exposed to the internet either in whole or in part, as controlled by external
+# services which dictate access and business logic for reaching the raw data.
+# The data is firewalled from raw access by default to encourage writing access services.
+# By default only one CIDR/24 block is allocated for it in each AZ, but additional subnets can be created and
+# associated with the route table and network ACLs to expand it.
 resource "aws_subnet" "external_db" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -77,6 +85,7 @@ resource "aws_subnet" "external_db" {
   }
 }
 
+# The external db route table is shared for all external db subnets
 resource "aws_route_table" "external_db" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -85,12 +94,16 @@ resource "aws_route_table" "external_db" {
   }
 }
 
+# The route table association is created for each AZ subnet, additional subnets will need to provide this themselves
 resource "aws_route_table_association" "external_db" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.external_db.*.id, count.index)}"
   subnet_id = "${element(aws_subnet.external_db.*.id, count.index)}"
 }
 
+# The external db route table has a route entry to allow access to the public internet external subnet NAT
+# This will allow non-managed services to recieve updates or directly expose data if they so chose, but under then NAT rules of
+# the external subnet.
 resource "aws_route" "external_db_to_nat" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.external_db.*.id, count.index)}"
@@ -99,6 +112,12 @@ resource "aws_route" "external_db_to_nat" {
 }
 
 
+### INTERNAL SUBNET
+# The base internal subnets.
+# One subnet is allocated for each availability zone specified for the module.
+# Internal subnets are designed for services or systems designed to talk to internal customers on VPN.
+# By default only one CIDR/24 block is allocated for it in each AZ, but additional subnets can be created and
+# associated with the route table and network ACLs to expand it.
 resource "aws_subnet" "internal" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -109,6 +128,7 @@ resource "aws_subnet" "internal" {
   }
 }
 
+# The internal route table is shared for all internal subnets
 resource "aws_route_table" "internal" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -117,12 +137,16 @@ resource "aws_route_table" "internal" {
   }
 }
 
+# The route table association is created for each AZ subnet, additional subnets will need to provide this themselves
 resource "aws_route_table_association" "internal" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.internal.*.id, count.index)}"
   subnet_id = "${element(aws_subnet.internal.*.id, count.index)}"
 }
 
+# The inernal route table has a route entry to allow access to the public internet external subnet NAT
+# This will allow non-managed services to recieve updates or directly expose data if they so chose, but under then NAT rules of
+# the external subnet.
 resource "aws_route" "internal_to_nat" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.internal.*.id, count.index)}"
@@ -130,6 +154,17 @@ resource "aws_route" "internal_to_nat" {
   nat_gateway_id = "${element(aws_nat_gateway.external.*.id, count.index)}"
 }
 
+
+
+### INTERNAL DB SUBNET
+# The base internal database subnets.
+# One subnet is allocated for each availability zone specified for the module.
+# Internal db subnets are designed for data storage for services designed to be connected to private intranet
+# This data may be fully exposed to VPN either in whole or in part, as controlled by internal
+# services which dictate access and business logic for reaching the raw data.
+# The data is firewalled from raw access by default to encourage writing access services.
+# By default only one CIDR/24 block is allocated for it in each AZ, but additional subnets can be created and
+# associated with the route table and network ACLs to expand it.
 resource "aws_subnet" "internal_db" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -140,6 +175,7 @@ resource "aws_subnet" "internal_db" {
   }
 }
 
+# The internal db route table is shared for all internal db subnets
 resource "aws_route_table" "internal_db" {
   count = "${length(var.vpc_zones)}"
   vpc_id = "${aws_vpc.tier.id}"
@@ -148,12 +184,16 @@ resource "aws_route_table" "internal_db" {
   }
 }
 
+# The route table association is created for each AZ subnet, additional subnets will need to provide this themselves
 resource "aws_route_table_association" "internal_db" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.internal_db.*.id, count.index)}"
   subnet_id = "${element(aws_subnet.internal_db.*.id, count.index)}"
 }
 
+# The inernal db route table has a route entry to allow access to the public internet external subnet NAT
+# This will allow non-managed services to recieve updates or directly expose data if they so chose, but under then NAT rules of
+# the external subnet.
 resource "aws_route" "internal_db_to_nat" {
   count = "${length(var.vpc_zones)}"
   route_table_id = "${element(aws_route_table.internal_db.*.id, count.index)}"
@@ -162,6 +202,8 @@ resource "aws_route" "internal_db_to_nat" {
 }
 
 
+# The internet gateway for this tier VPC
+# All inbound traffic comes through this
 resource "aws_internet_gateway" "tier" {
   vpc_id = "${aws_vpc.tier.id}"
   tags {
