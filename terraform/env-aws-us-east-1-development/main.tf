@@ -1,5 +1,5 @@
-module "env-tier" {
-  source = "../modules/env-tier"
+module "aws-tier" {
+  source = "../modules/aws-tier"
   org_name = "${var.org_name}" 
   tier_name = "development"
   vpc_cidr_block = "10.0.0.0/16"
