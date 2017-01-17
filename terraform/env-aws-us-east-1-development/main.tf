@@ -1,4 +1,4 @@
-module "aws-tier" {
+module "aws-development-tier" {
   source = "../modules/aws-tier"
   org_name = "${var.org_name}" 
   tier_name = "development"
