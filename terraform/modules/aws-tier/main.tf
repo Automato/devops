@@ -111,6 +111,14 @@ resource "aws_route" "external_db_to_nat" {
   nat_gateway_id = "${element(aws_nat_gateway.external.*.id, count.index)}"
 }
 
+resource "aws_db_subnet_group" "external_db" {
+  name = "external_db"
+  subnet_ids = ["${aws_subnet.external_db.*.id}"]
+  tags {
+    Name = "${format("%s external_db %s", var.org_name, var.tier_name)}"
+  }
+}
+
 
 ### INTERNAL SUBNET
 # The base internal subnets.
@@ -199,6 +207,14 @@ resource "aws_route" "internal_db_to_nat" {
   route_table_id = "${element(aws_route_table.internal_db.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id = "${element(aws_nat_gateway.external.*.id, count.index)}"
+}
+
+resource "aws_db_subnet_group" "internal_db" {
+  name = "internal_db"
+  subnet_ids = ["${aws_subnet.internal_db.*.id}"]
+  tags {
+    Name = "${format("%s internal_db %s", var.org_name, var.tier_name)}"
+  }
 }
 
 
