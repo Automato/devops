@@ -45,3 +45,55 @@ resource "aws_security_group_rule" "egress_from_api_app_to_postgres" {
   security_group_id = "${module.aws-api-ec2-tier.security_group_id}"
   source_security_group_id = "${module.aws-api-postgres-db.security_group_id}"
 }
+
+
+# SSH
+#TODO: remove. like who uses ssh these days boy
+resource "aws_security_group_rule" "ssh_to_ec2" {
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+
+  # Apply rules to the given security group if it is provided, otherwise apply them the the created group
+  security_group_id = "${module.aws-api-ec2-tier.security_group_id}"
+  source_security_group_id = "${module.aws-api-postgres-db.security_group_id}"
+}
+
+# HTTP
+#TODO: remove.
+resource "aws_security_group_rule" "http_to_ec2" {
+  type = "ingress"
+  from_port = 80
+  to_port = 80
+  protocol = "tcp"
+
+  # Apply rules to the given security group if it is provided, otherwise apply them the the created group
+  security_group_id = "${module.aws-api-ec2-tier.security_group_id}"
+  source_security_group_id = "${module.aws-api-postgres-db.security_group_id}"
+}
+
+# HTTPS
+#TODO: remove.
+resource "aws_security_group_rule" "https_to_ec2" {
+  type = "ingress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+
+  # Apply rules to the given security group if it is provided, otherwise apply them the the created group
+  security_group_id = "${module.aws-api-ec2-tier.security_group_id}"
+  source_security_group_id = "${module.aws-api-postgres-db.security_group_id}"
+}
+
+# outbound update ports nshiz
+#TODO: remove.
+resource "aws_security_group_rule" "outbound_from_ec2" {
+  type = "egress"
+  from_port = -1
+  to_port = -1
+  protocol = -1
+
+  security_group_id = "${module.aws-api-ec2-tier.security_group_id}"
+  cidr_blocks = ["0.0.0.0/0"]
+}
