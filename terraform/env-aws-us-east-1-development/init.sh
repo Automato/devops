@@ -18,5 +18,8 @@ terraform remote config -backend=s3 \
                         -backend-config="key=terraform/env-aws-us-east-1-development.tfstate" \
                         -backend-config="region=us-east-1"
 
+# Get the remote state
+terraform remote pull
+
 # "Get" any modules used by this
 terraform get

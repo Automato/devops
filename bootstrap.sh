@@ -23,3 +23,6 @@ terraform remote config -backend=s3 \
   -backend-config="key=terraform/bootstrap.tfstate" \
   -backend-config="region=us-east-1"
 
+# Push the state up to the remote bucket
+terraform remote push
+
