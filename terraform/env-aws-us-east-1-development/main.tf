@@ -25,7 +25,7 @@ module "aws-api-postgres-db" {
 # Add an inbound security rule for app to be allowed to access the database
 resource "aws_security_group_rule" "ingress_from_api_app_to_postgres" {
   type = "ingress"
-  from_port = 0
+  from_port = 5432
   to_port = 5432
   protocol = "tcp"
 
@@ -37,7 +37,7 @@ resource "aws_security_group_rule" "ingress_from_api_app_to_postgres" {
 # Add an outbound security rule for app to be allowed to access the database
 resource "aws_security_group_rule" "egress_from_api_app_to_postgres" {
   type = "egress"
-  from_port = 0
+  from_port = 5432
   to_port = 5432
   protocol = "tcp"
 
